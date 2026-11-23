@@ -3,7 +3,18 @@
 declare(strict_types=1);
 $GLOBALS['mbwc_options']=[];
 $GLOBALS['mbwc_http_calls']=[];
-class StubDb { public string $prefix='wp_'; public function insert(string $table,array $values,array $format=[]):bool{return true;} }
+define('DB_NAME', 'mbwc_test');
+class StubDb {
+    public string $prefix='wp_';
+    public string $last_error='';
+    public function insert(string $table,array $values,array $format=[]):bool{return true;}
+    public function prepare(string $query,mixed ...$args):string{return $query;}
+    public function get_var(string $query):mixed {
+        if (str_contains($query,'GET_LOCK')) {return $GLOBALS['mbwc_busy'] ?? 1;}
+        if (str_contains($query,'mappings')) {return $GLOBALS['mbwc_mapping_exists'] ?? null;}
+        return 1;
+    }
+}
 $GLOBALS['wpdb']=new StubDb();
 class WP_Error {
     public function __construct(private string $code='',private string $message='',private mixed $data=null) {}
@@ -13,7 +24,12 @@ class WP_Error {
 }
 function is_wp_error(mixed $x): bool {return $x instanceof WP_Error;}
 function get_option(string $key,mixed $default=null): mixed{return $GLOBALS['mbwc_options'][$key]??$default;}
-function update_option(string $key,mixed $value,bool $autoload=false):bool{$GLOBALS['mbwc_options'][$key]=$value;return true;}
+function update_option(string $key,mixed $value,bool $autoload=false):bool {
+    if ($key===($GLOBALS['mbwc_fail_option']??null)) {return false;}
+    if (array_key_exists($key,$GLOBALS['mbwc_options']) && $GLOBALS['mbwc_options'][$key]===$value) {return false;}
+    $GLOBALS['mbwc_options'][$key]=$value;
+    return true;
+}
 function delete_option(string $key):bool{unset($GLOBALS['mbwc_options'][$key]);return true;}
 function wp_salt(string $scheme='auth'): string{return 'testing-only-'.$scheme;}
 function wp_parse_url(string $url,int $component=-1):array|string|int|false|null{return $component===-1?parse_url($url):parse_url($url,$component);}
@@ -23,6 +39,7 @@ function wp_json_encode(mixed $value,int $flags=0):string|false{return json_enco
 function add_query_arg(array $query,string $url):string{return $url.'?'.http_build_query($query);}
 function wp_safe_remote_request(string $url,array $args):array {
     $GLOBALS['mbwc_http_calls'][]=[$url,$args];
+    if (isset($GLOBALS['mbwc_http_response'])) {return $GLOBALS['mbwc_http_response'];}
     return ['response'=>['code'=>200], 'body'=>'{"status":"ok","data":{"phone_number":"09123456789","access_token":"TEST_SECRET"}}'];
 }
 function wp_remote_retrieve_response_code(array $r):int{return $r['response']['code'];}
@@ -61,6 +78,29 @@ ok(Accounts::save('digikala','seller_two','Second seller','ABC012','TEST_SECOND'
 ok(Accounts::token('digikala','seller_two')==='TEST_SECOND','seller token isolation');
 ok(Accounts::sellerCode('seller_two')==='ABC012','seller code isolation');
 ok(Accounts::token('digikala','default')==='TEST_SECRET','default legacy token migration preserved');
+ok(Accounts::save('digikala','seller_two','Second seller','ABC012','')===true,'resaving unchanged account succeeds');
+ok(Accounts::save('digikala','seller-hyphen','Hyphenated seller','','TOKEN_HYPHEN')===true,'hyphenated seller ID can save a token');
+ok(Accounts::token('digikala','seller-hyphen')==='TOKEN_HYPHEN','hyphenated seller token roundtrip');
+ok(!Secrets::set('digikala','access_token',"TOKEN\nCONTINUATION"),'credential with embedded whitespace rejected');
+$GLOBALS['mbwc_fail_option']='mbwc_accounts_digikala';
+ok(Accounts::save('digikala','seller-hyphen','Changed label','','NEW_TOKEN')===false
+    && Accounts::token('digikala','seller-hyphen')==='TOKEN_HYPHEN','failed account save restores previous credential');
+unset($GLOBALS['mbwc_fail_option']);
+$GLOBALS['mbwc_mapping_exists']=123;
+ok(!Accounts::remove('digikala','seller_two'),'account deletion with mappings is rejected at the storage layer');
+ok(is_wp_error(Accounts::save('digikala','seller_two','Second seller','NEW_SELLER','TEST_SECOND')),'mapped account cannot change seller identity');
+unset($GLOBALS['mbwc_mapping_exists']);
+$GLOBALS['mbwc_busy']=0;
+ok(is_wp_error(Accounts::credentials('seller_two')),'credential read fails cleanly while the account is changing');
+unset($GLOBALS['mbwc_busy']);
+ok(is_wp_error(Accounts::save('digikala','SELLER-HYPHEN','Duplicate','','')),'account ID aliases cannot share storage');
+ok(Accounts::save('digikala','default','Default','OLD_CODE','')===true,'stored default account supported');
+update_option('mbwc_digikala_seller_code','NEW_CODE');
+ok(Accounts::sellerCode()==='NEW_CODE','changes to default seller code apply after account creation');
+ok(!is_wp_error((new DigikalaClient())->read('variants', ['search[search_term]'=>'A&B + C'], 'seller-hyphen')),'seller-specific query can be sent');
+$last=end($GLOBALS['mbwc_http_calls']);
+ok(!isset($last[1]['headers']['User-Agent']),'additional seller does not inherit default seller header');
+ok(str_ends_with($last[0],'?search%5Bsearch_term%5D=A%26B%20%2B%20C'),'query values keep literal separators and spaces');
 ok(!Accounts::exists('digikala','missing'),'missing seller rejected');
 $spec = json_encode(['openapi'=>'3.0.3','info'=>['version'=>'current'], 'servers'=>[['url'=>'https://seller.digikala.com/open-api/v1']], 'paths'=>[
  '/variants'=>['get'=>['summary'=>'List variants','tags'=>['variants']]],
@@ -87,6 +127,21 @@ ok(is_wp_error(OpenApiCatalog::execute($get['id'],[],[],null,'missing')),'unknow
 ok(is_wp_error(OpenApiCatalog::execute($get['id'],[],[],['irrelevant'=>1])),'GET body forbidden');
 $bad = OpenApiCatalog::import(json_encode(['openapi'=>'3.0.0','servers'=>[['url'=>'https://evil.example/open-api/v1']],'paths'=>['/variants'=>['get'=>[]]]],JSON_UNESCAPED_SLASHES));
 ok(is_wp_error($bad),'foreign OpenAPI origin rejected');
+$nested = json_encode([
+    'openapi'=>'3.0.3',
+    'servers'=>[['url'=>'/open-api/v1/seller']],
+    'components'=>['parameters'=>['page'=>['in'=>'query','name'=>'page','required'=>true]]],
+    'paths'=>['/variants/{variant-id}'=>[
+        'parameters'=>[['$ref'=>'#/components/parameters/page']],
+        'get'=>['parameters'=>[['in'=>'query','name'=>'page','required'=>false]]],
+    ]],
+]);
+ok(OpenApiCatalog::import($nested)===1,'importer accepts an API subpath with local references');
+$nestedOp=array_values(OpenApiCatalog::all())[0];
+ok($nestedOp['path']==='/open-api/v1/seller/variants/{variant-id}' && $nestedOp['paths']===['variant-id']
+    && $nestedOp['query']===['page'] && !$nestedOp['required_query'],'importer resolves base path, path parameter and operation-level query override');
+ok(!is_wp_error(OpenApiCatalog::execute($nestedOp['id'],['variant-id'=>'42'],[],null,'seller_two')),
+    'resolved relative OpenAPI route is executable');
 ok(is_wp_error(Http::request('digikala','GET','/open-api/v1/../secret','x')),'path traversal rejected');
 ok(is_wp_error(Http::request('torob','GET','//evil.example/a','x')),'host injection rejected');
 $redacted=Redaction::scrub(['access_token'=>'abc','nested'=>['phone_number'=>'09123456789','public_id'=>'safe'],'details'=>'Bearer secret123']);
@@ -98,6 +153,14 @@ ok(!is_wp_error($result),'Torob Shop products request test transport');
 $last=end($GLOBALS['mbwc_http_calls']);
 ok(($last[1]['body']??'')==='{}','Torob empty filter serialized as JSON object');
 ok(is_wp_error((new TorobClient())->run('clicks')),'Torob click report requires date');
+ok(is_wp_error((new TorobClient())->run('clicks',['date'=>'2026-02-31'])),'Torob click report rejects impossible date');
+ok(is_wp_error((new TorobClient())->run('activate',[],['product_ids'=>[123]])),'Torob rejects incorrect activation product IDs');
+Secrets::set('torob','webhook_token','TOROB_WEBHOOK_TEST');
+$items=[['page_url'=>'https://example.org/product/123','page_unique'=>'wc_123']];
+ok(is_wp_error((new TorobClient())->update_webhook($items)),'unexpected successful HTTP response is not a webhook acknowledgment');
+$GLOBALS['mbwc_http_response']=['response'=>['code'=>200],'body'=>'{"message":"success"}'];
+ok(!is_wp_error((new TorobClient())->update_webhook($items)),'documented Torob webhook acknowledgment accepted');
+unset($GLOBALS['mbwc_http_response']);
 ok(is_wp_error((new DigikalaClient())->read('not_allowed')),'Digikala operation allowlist enforced');
 ok(Accounts::remove('digikala','seller_two'),'seller account removal');
 ok(Accounts::token('digikala','seller_two')==='','removed seller credential deleted');

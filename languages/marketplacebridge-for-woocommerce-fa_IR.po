@@ -1,0 +1,851 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MarketplaceBridge for WooCommerce\n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "A mapping links an existing Digikala variant to a simple WooCommerce product or a variation."
+msgstr "نگاشت، یک تنوع موجود در دیجی‌کالا را به محصول ساده یا تنوع ووکامرس مرتبط می‌کند."
+
+msgid "A valid date in Tehran (YYYY-MM-DD) is required."
+msgstr "تاریخ معتبری به وقت تهران و با قالب YYYY-MM-DD وارد کنید."
+
+msgid "API catalog"
+msgstr "فهرست API"
+
+msgid "API health"
+msgstr "وضعیت API"
+
+msgid "Access denied."
+msgstr "دسترسی مجاز نیست."
+
+msgid "Access scopes"
+msgstr "سطوح دسترسی"
+
+msgid "Account"
+msgstr "حساب"
+
+msgid "Account ID"
+msgstr "شناسهٔ حساب"
+
+msgid "Account IDs must be unique regardless of letter case."
+msgstr "شناسهٔ حساب‌ها بدون توجه به بزرگی و کوچکی حروف باید متمایز باشد."
+
+msgid "Account removed."
+msgstr "حساب حذف شد."
+
+msgid "Accounts with a token"
+msgstr "حساب‌های دارای توکن"
+
+msgid "Action attribution"
+msgstr "رهگیری اقدام"
+
+msgid "Actions"
+msgstr "عملیات"
+
+msgid "Activate products on Torob"
+msgstr "فعال کردن محصولات در ترب"
+
+msgid "Active reports"
+msgstr "گزارش‌های فعال"
+
+msgid "Activity"
+msgstr "گزارش فعالیت"
+
+msgid "Add product mapping"
+msgstr "افزودن نگاشت محصول"
+
+msgid "Add seller account"
+msgstr "افزودن حساب فروشنده"
+
+msgid "Additional integrations"
+msgstr "اتصال‌های دیگر"
+
+msgid "All accounts"
+msgstr "همهٔ حساب‌ها"
+
+msgid "All levels"
+msgstr "همهٔ سطوح"
+
+msgid "All providers"
+msgstr "همهٔ سرویس‌ها"
+
+msgid "Another operation is in progress. Try again."
+msgstr "عملیات دیگری در حال اجراست. دوباره تلاش کنید."
+
+msgid "Answer price reports"
+msgstr "پاسخ به گزارش‌های قیمت"
+
+msgid "Any"
+msgstr "همه"
+
+msgid "Apply this change to the specified IDs on Torob."
+msgstr "این تغییر برای شناسه‌های واردشده در ترب اعمال شود."
+
+msgid "Availability"
+msgstr "وضعیت موجودی"
+
+msgid "Available"
+msgstr "موجود"
+
+msgid "Cancel edit"
+msgstr "لغو ویرایش"
+
+msgid "Catalog only"
+msgstr "فقط در فهرست"
+
+msgid "Catalog-only operations"
+msgstr "عملیات قابل مشاهده در فهرست"
+
+msgid "Category tree"
+msgstr "درخت دسته‌بندی"
+
+msgid "Change Torob settings"
+msgstr "تغییر تنظیمات ترب"
+
+msgid "Change notifications require the feed, a webhook token and a working WordPress cron."
+msgstr "اعلان تغییرات به فید فعال، توکن وب‌هوک و زمان‌بند سالم وردپرس نیاز دارد."
+
+msgid "Check access scopes"
+msgstr "بررسی سطح دسترسی"
+
+msgid "Check transfer eligibility"
+msgstr "بررسی امکان انتقال اعتبار"
+
+msgid "Check variant access through Digikala before saving"
+msgstr "پیش از ذخیره، دسترسی به تنوع را در دیجی‌کالا بررسی کن"
+
+msgid "Choose a read-only operation."
+msgstr "یک عملیات خواندنی انتخاب کنید."
+
+msgid "Choose a resolution"
+msgstr "نتیجه را انتخاب کنید"
+
+msgid "Choose a unit"
+msgstr "واحد را انتخاب کنید"
+
+msgid "Choose an available operation."
+msgstr "یکی از عملیات موجود را انتخاب کنید."
+
+msgid "Click report"
+msgstr "گزارش کلیک"
+
+msgid "Click type"
+msgstr "نوع کلیک"
+
+msgid "Configure a Torob Shop API token first"
+msgstr "ابتدا توکن API فروشگاه ترب را تنظیم کنید."
+
+msgid "Configure this seller account token first."
+msgstr "ابتدا توکن این حساب فروشنده را تنظیم کنید."
+
+msgid "Configured"
+msgstr "تنظیم‌شده"
+
+msgid "Confirm account removal with its ID."
+msgstr "حذف حساب را با وارد کردن شناسهٔ آن تأیید کنید."
+
+msgid "Confirm removal of the mapping."
+msgstr "حذف نگاشت را تأیید کنید."
+
+msgid "Confirm the change before submitting."
+msgstr "پیش از ارسال، تغییر را تأیید کنید."
+
+msgid "Connections"
+msgstr "اتصال‌ها"
+
+msgid "Corrected"
+msgstr "قیمت اصلاح شد"
+
+msgid "Could not read product mappings."
+msgstr "خواندن نگاشت‌های محصولات انجام نشد."
+
+msgid "Could not read the Torob queue."
+msgstr "خواندن صف ترب انجام نشد."
+
+msgid "Could not read the activity log."
+msgstr "خواندن گزارش فعالیت انجام نشد."
+
+msgid "Could not remove the account."
+msgstr "حذف حساب انجام نشد."
+
+msgid "Could not remove the mapping."
+msgstr "حذف نگاشت انجام نشد."
+
+msgid "Could not retry this item. Check the connection and refresh the queue."
+msgstr "تلاش مجدد ثبت نشد. اتصال را بررسی و صفحهٔ صف را تازه کنید."
+
+msgid "Could not save Torob settings."
+msgstr "ذخیرهٔ تنظیمات ترب انجام نشد."
+
+msgid "Could not save the account."
+msgstr "ذخیرهٔ حساب انجام نشد."
+
+msgid "Could not save the mapping."
+msgstr "ذخیرهٔ نگاشت انجام نشد."
+
+msgid "Could not save the seller token."
+msgstr "ذخیرهٔ توکن فروشنده انجام نشد."
+
+msgid "Create account"
+msgstr "ایجاد حساب"
+
+msgid "Cursor"
+msgstr "نشانگر صفحهٔ بعد"
+
+msgid "DKP"
+msgstr "DKP"
+
+msgid "Data table"
+msgstr "جدول داده‌ها"
+
+msgid "Database setup is incomplete."
+msgstr "راه‌اندازی پایگاه داده کامل نشده است."
+
+msgid "Database setup is incomplete. Refresh in one minute. If it persists, check database permissions."
+msgstr "راه‌اندازی پایگاه داده کامل نشده است. یک دقیقه بعد صفحه را تازه کنید. اگر مشکل ادامه داشت، دسترسی پایگاه داده را بررسی کنید."
+
+msgid "Date in Tehran (YYYY-MM-DD)"
+msgstr "تاریخ به وقت تهران (YYYY-MM-DD)"
+
+msgid "Deactivate products on Torob"
+msgstr "غیرفعال کردن محصولات در ترب"
+
+msgid "Default"
+msgstr "پیش‌فرض"
+
+msgid "Delivery is paused. Enable the product feed and notifications and configure the webhook token."
+msgstr "ارسال متوقف است. فید و اعلان تغییرات را فعال کنید و توکن وب‌هوک را وارد کنید."
+
+msgid "Delivery queue"
+msgstr "صف ارسال"
+
+msgid "Destination domain"
+msgstr "دامنهٔ مقصد"
+
+msgid "Details"
+msgstr "جزئیات"
+
+msgid "Digikala"
+msgstr "دیجی‌کالا"
+
+msgid "Digikala OpenAPI catalog"
+msgstr "فهرست OpenAPI دیجی‌کالا"
+
+msgid "Digikala product ID (DKP), optional"
+msgstr "شناسهٔ محصول دیجی‌کالا (DKP)، اختیاری"
+
+msgid "Digikala seller access"
+msgstr "دسترسی فروشندگان دیجی‌کالا"
+
+msgid "Digikala seller accounts"
+msgstr "حساب‌های فروشندگی دیجی‌کالا"
+
+msgid "Digikala variant ID (DKPC)"
+msgstr "شناسهٔ تنوع دیجی‌کالا (DKPC)"
+
+msgid "Disabled"
+msgstr "غیرفعال"
+
+msgid "Display name"
+msgstr "نام نمایشی"
+
+msgid "Edit"
+msgstr "ویرایش"
+
+msgid "Edit product mapping"
+msgstr "ویرایش نگاشت محصول"
+
+msgid "Edit seller account"
+msgstr "ویرایش حساب فروشنده"
+
+msgid "Enable PHP Sodium before turning on a Torob endpoint."
+msgstr "پیش از فعال کردن مسیر ترب، ماژول Sodium را در PHP فعال کنید."
+
+msgid "Enable the authenticated product feed"
+msgstr "فید محصولات را با احراز هویت فعال کن"
+
+msgid "Enabled"
+msgstr "فعال"
+
+msgid "Endpoint"
+msgstr "مسیر API"
+
+msgid "Enter a positive Digikala variant ID and, optionally, a valid DKP."
+msgstr "شناسهٔ مثبت تنوع دیجی‌کالا و در صورت نیاز DKP معتبر را وارد کنید."
+
+msgid "Enter a valid token or select clear."
+msgstr "توکن معتبر وارد کنید یا گزینهٔ حذف توکن را انتخاب کنید."
+
+msgid "Error"
+msgstr "خطا"
+
+msgid "Explanation"
+msgstr "توضیح"
+
+msgid "Exported price in Toman"
+msgstr "قیمت ارسالی به تومان"
+
+msgid "Expose actions recorded by extensions"
+msgstr "اقدامات ثبت‌شده به‌وسیلهٔ افزونه‌ها را در دسترس ترب قرار بده"
+
+msgid "Failed"
+msgstr "ناموفق"
+
+msgid "Failed products"
+msgstr "محصولات ناموفق"
+
+msgid "Filter"
+msgstr "اعمال فیلتر"
+
+msgid "Find API operations"
+msgstr "جست‌وجوی عملیات API"
+
+msgid "Find a WooCommerce product by name, SKU or ID"
+msgstr "جست‌وجوی محصول ووکامرس با نام، SKU یا شناسه"
+
+msgid "Find products on Torob"
+msgstr "جست‌وجوی محصولات در ترب"
+
+msgid "Group"
+msgstr "گروه"
+
+msgid "Guaranteed clicks"
+msgstr "کلیک‌های تضمینی"
+
+msgid "IRR — Rial"
+msgstr "ریال (IRR)"
+
+msgid "IRT — Toman"
+msgstr "تومان (IRT)"
+
+msgid "Import catalog"
+msgstr "ورود فهرست"
+
+msgid "Import the official seller OpenAPI JSON. Importing replaces the current catalog."
+msgstr "فایل رسمی JSON بخش OpenAPI فروشندگان را وارد کنید. فایل جدید جایگزین فهرست فعلی می‌شود."
+
+msgid "Include item prices and shipping for attributed orders"
+msgstr "قیمت اقلام و هزینهٔ ارسال سفارش ارجاعی را هم بفرست"
+
+msgid "Include the customer phone for attributed orders"
+msgstr "شمارهٔ تلفن مشتری سفارش ارجاعی را هم بفرست"
+
+msgid "Info"
+msgstr "اطلاع"
+
+msgid "Integration activity"
+msgstr "گزارش فعالیت اتصال‌ها"
+
+msgid "Invalid Digikala account configuration."
+msgstr "تنظیمات حساب دیجی‌کالا معتبر نیست."
+
+msgid "Invalid OpenAPI/Swagger JSON"
+msgstr "فایل JSON مربوط به OpenAPI یا Swagger معتبر نیست."
+
+msgid "Invalid price report resolution"
+msgstr "نتیجهٔ انتخاب‌شده برای گزارش قیمت معتبر نیست."
+
+msgid "Invalid product ID"
+msgstr "شناسهٔ محصول معتبر نیست."
+
+msgid "Invalid report_id"
+msgstr "شناسهٔ گزارش معتبر نیست."
+
+msgid "Invalid variant ID"
+msgstr "شناسهٔ تنوع نامعتبر است."
+
+msgid "Inventory"
+msgstr "موجودی"
+
+msgid "JSON response"
+msgstr "پاسخ JSON"
+
+msgid "Last connection test"
+msgstr "آخرین آزمون اتصال"
+
+msgid "Last error"
+msgstr "آخرین خطا"
+
+msgid "Leave blank to keep current token"
+msgstr "برای حفظ توکن فعلی خالی بگذارید"
+
+msgid "Level"
+msgstr "سطح"
+
+msgid "Manage WooCommerce connections to Torob and Digikala."
+msgstr "اتصال‌های ووکامرس به ترب و دیجی‌کالا را مدیریت کنید."
+
+msgid "Manage connections"
+msgstr "مدیریت اتصال‌ها"
+
+msgid "Manage mappings"
+msgstr "مدیریت نگاشت‌ها"
+
+msgid "Mapping removed."
+msgstr "نگاشت حذف شد."
+
+msgid "Mapping saved."
+msgstr "نگاشت ذخیره شد."
+
+msgid "Mappings"
+msgstr "نگاشت محصولات"
+
+msgid "Marketplace Bridge"
+msgstr "اتصال به بازارگاه‌ها"
+
+msgid "Marketplace navigation"
+msgstr "ناوبری بازارگاه‌ها"
+
+msgid "Maximum 20 additional accounts allowed."
+msgstr "حداکثر ۲۰ حساب اضافی می‌توان ایجاد کرد."
+
+msgid "Missing"
+msgstr "تنظیم‌نشده"
+
+msgid "Next"
+msgstr "بعدی"
+
+msgid "Next scheduled run"
+msgstr "اجرای زمان‌بندی‌شدهٔ بعدی"
+
+msgid "No"
+msgstr "خیر"
+
+msgid "No Digikala seller API operations found"
+msgstr "هیچ عملیات API فروشندگان دیجی‌کالا یافت نشد."
+
+msgid "No activity matches these filters."
+msgstr "فعالیتی مطابق فیلترها پیدا نشد."
+
+msgid "No catalog has been imported."
+msgstr "هنوز فهرستی وارد نشده است."
+
+msgid "No mappings were found."
+msgstr "نگاشتی پیدا نشد."
+
+msgid "No operations match your search."
+msgstr "عملیاتی مطابق جست‌وجو یافت نشد."
+
+msgid "No products are waiting for delivery."
+msgstr "صف ارسال خالی است."
+
+msgid "No simple products or variations match that search."
+msgstr "محصول ساده یا تنوعی مطابق جست‌وجو یافت نشد."
+
+msgid "No token configured"
+msgstr "هنوز توکنی ثبت نشده است"
+
+msgid "Not tested recently"
+msgstr "اخیراً آزمون نشده"
+
+msgid "Notify Torob about product changes"
+msgstr "تغییرات محصولات را به ترب اطلاع بده"
+
+msgid "Open"
+msgstr "باز کردن"
+
+msgid "Open operation"
+msgstr "باز کردن عملیات"
+
+msgid "OpenAPI JSON file"
+msgstr "فایل JSON مربوط به OpenAPI"
+
+msgid "OpenAPI catalog imported."
+msgstr "فهرست OpenAPI وارد شد."
+
+msgid "Operation"
+msgstr "عملیات"
+
+msgid "Order and action attribution"
+msgstr "رهگیری سفارش‌ها و اقدامات ارجاعی"
+
+msgid "Order attribution"
+msgstr "رهگیری سفارش"
+
+msgid "Order details and phone sharing apply only when order attribution is enabled."
+msgstr "ارسال جزئیات سفارش و تلفن تنها در صورت فعال بودن رهگیری سفارش انجام می‌شود."
+
+msgid "Order history"
+msgstr "تاریخچهٔ سفارش‌ها"
+
+msgid "Order statistics"
+msgstr "آمار سفارش‌ها"
+
+msgid "Orders"
+msgstr "سفارش‌ها"
+
+msgid "Overview"
+msgstr "نمای کلی"
+
+msgid "Packages"
+msgstr "بسته‌ها"
+
+msgid "Page"
+msgstr "صفحه"
+
+msgid "Page %1$s of %2$s"
+msgstr "صفحهٔ %1$s از %2$s"
+
+msgid "Page size"
+msgstr "تعداد در هر صفحه"
+
+msgid "Pagination"
+msgstr "صفحه‌بندی"
+
+msgid "Pending"
+msgstr "در انتظار"
+
+msgid "Pending products"
+msgstr "محصولات در انتظار ارسال"
+
+msgid "Plain permalinks require the WordPress REST URL."
+msgstr "با پیوند یکتای ساده، از نشانی REST وردپرس استفاده کنید."
+
+msgid "Preview"
+msgstr "پیش‌نمایش"
+
+msgid "Preview a product"
+msgstr "پیش‌نمایش محصول"
+
+msgid "Previous"
+msgstr "قبلی"
+
+msgid "Price reports"
+msgstr "گزارش‌های قیمت"
+
+msgid "Product IDs must contain 1–5000 identifiers"
+msgstr "از یک تا ۵۰۰۰ شناسهٔ محصول وارد کنید."
+
+msgid "Product change notifications"
+msgstr "اعلان تغییرات محصول"
+
+msgid "Product delivery queue"
+msgstr "صف ارسال تغییرات محصولات"
+
+msgid "Product feed"
+msgstr "فید محصولات"
+
+msgid "Product mappings"
+msgstr "نگاشت‌های محصول"
+
+msgid "Product missing"
+msgstr "محصول یافت نشد"
+
+msgid "Product publishing"
+msgstr "انتشار محصولات"
+
+msgid "Product queued for retry."
+msgstr "محصول برای ارسال مجدد به صف اضافه شد."
+
+msgid "Product status"
+msgstr "وضعیت محصول"
+
+msgid "Provider"
+msgstr "سرویس"
+
+msgid "Publish products, prices or stock"
+msgstr "انتشار محصول، قیمت و موجودی"
+
+msgid "Read from Digikala"
+msgstr "دریافت از دیجی‌کالا"
+
+msgid "Read from an imported endpoint"
+msgstr "خواندن از مسیر واردشده"
+
+msgid "Read seller data"
+msgstr "خواندن داده‌های فروشنده"
+
+msgid "Remove"
+msgstr "حذف"
+
+msgid "Remove account"
+msgstr "حذف حساب"
+
+msgid "Remove mapping"
+msgstr "حذف نگاشت"
+
+msgid "Remove stored token"
+msgstr "حذف توکن ذخیره‌شده"
+
+msgid "Remove the account’s mappings before removing the connection."
+msgstr "پیش از حذف حساب، نگاشت‌های آن را حذف کنید."
+
+msgid "Remove this account’s product mappings first."
+msgstr "ابتدا نگاشت‌های محصولات این حساب را حذف کنید."
+
+msgid "Remove this mapping?"
+msgstr "این نگاشت حذف شود؟"
+
+msgid "Report IDs"
+msgstr "شناسه‌های گزارش"
+
+msgid "Report description is too long"
+msgstr "متن توضیح گزارش بیش از حد بلند است."
+
+msgid "Report is invalid"
+msgstr "گزارش نامعتبر است"
+
+msgid "Request completed."
+msgstr "درخواست انجام شد."
+
+msgid "Request completed. The response is too large to display here."
+msgstr "درخواست انجام شد. پاسخ برای نمایش در این صفحه بیش از حد بزرگ است."
+
+msgid "Resolution"
+msgstr "نتیجهٔ بررسی"
+
+msgid "Retry"
+msgstr "تلاش مجدد"
+
+msgid "Retry scheduled"
+msgstr "تلاش مجدد زمان‌بندی‌شده"
+
+msgid "Runnable GET operations"
+msgstr "درخواست‌های خواندنی قابل اجرا"
+
+msgid "Save Torob settings"
+msgstr "ذخیرهٔ تنظیمات ترب"
+
+msgid "Save account"
+msgstr "ذخیرهٔ حساب"
+
+msgid "Save mapping"
+msgstr "ذخیرهٔ نگاشت"
+
+msgid "Saved mappings"
+msgstr "نگاشت‌های ذخیره‌شده"
+
+msgid "Search"
+msgstr "جست‌وجو"
+
+msgid "Search by path, name or group"
+msgstr "جست‌وجو بر اساس مسیر، نام یا گروه"
+
+msgid "Search products"
+msgstr "جست‌وجوی محصولات"
+
+msgid "Search term"
+msgstr "عبارت جست‌وجو"
+
+msgid "Select a local OpenAPI JSON file up to 6 MB."
+msgstr "یک فایل محلی OpenAPI با قالب JSON و حداکثر ۶ مگابایت انتخاب کنید."
+
+msgid "Select a simple WooCommerce product or an individual variation."
+msgstr "محصول ساده یا یکی از تنوع‌های ووکامرس را انتخاب کنید."
+
+msgid "Select the WooCommerce price unit before enabling Torob."
+msgstr "پیش از فعال کردن ترب، واحد قیمت ووکامرس را انتخاب کنید."
+
+msgid "Seller access token"
+msgstr "توکن دسترسی فروشنده"
+
+msgid "Seller account"
+msgstr "حساب فروشنده"
+
+msgid "Seller account saved."
+msgstr "حساب فروشنده ذخیره شد."
+
+msgid "Seller code"
+msgstr "کد فروشنده"
+
+msgid "Seller products"
+msgstr "محصولات فروشنده"
+
+msgid "Separate IDs with commas, spaces or new lines."
+msgstr "شناسه‌ها را با ویرگول، فاصله یا خط جدید جدا کنید."
+
+msgid "Share status for Torob-referred orders"
+msgstr "وضعیت سفارش‌های ارجاع‌شده از ترب را ارسال کن"
+
+msgid "Shop API"
+msgstr "API فروشگاه"
+
+msgid "Shop API and attribution"
+msgstr "API فروشگاه و رهگیری ارجاع‌ها"
+
+msgid "Shop API token"
+msgstr "توکن API فروشگاه"
+
+msgid "Shop details"
+msgstr "اطلاعات فروشگاه"
+
+msgid "Shop domain"
+msgstr "دامنهٔ فروشگاه"
+
+msgid "Shop operations"
+msgstr "عملیات فروشگاه"
+
+msgid "Show JSON response"
+msgstr "نمایش پاسخ JSON"
+
+msgid "Specification must be 30 bytes–6 MB"
+msgstr "اندازهٔ فایل مستندات باید بین ۳۰ بایت و ۶ مگابایت باشد."
+
+msgid "State"
+msgstr "وضعیت"
+
+msgid "Status"
+msgstr "وضعیت"
+
+msgid "Submit operation"
+msgstr "ارسال درخواست"
+
+msgid "Summary"
+msgstr "خلاصه"
+
+msgid "Test a seller connection"
+msgstr "آزمون اتصال فروشنده"
+
+msgid "Test failed"
+msgstr "آزمون ناموفق"
+
+msgid "Test passed"
+msgstr "آزمون موفق"
+
+msgid "Test shop connection"
+msgstr "آزمون اتصال فروشگاه"
+
+msgid "The feed reports whole Toman. Preview a real product to check the conversion."
+msgstr "قیمت فید به تومانِ صحیح است. برای بررسی تبدیل، یک محصول را پیش‌نمایش کنید."
+
+msgid "The mapping already exists or changed. Open it from the list to edit it."
+msgstr "نگاشت از قبل وجود دارد یا تغییر کرده است. آن را از فهرست برای ویرایش باز کنید."
+
+msgid "This connection can read seller data. Publishing products or updating prices and stock is unavailable."
+msgstr "این اتصال داده‌های فروشنده را می‌خواند. انتشار محصول و به‌روزرسانی قیمت یا موجودی در دسترس نیست."
+
+msgid "This preview uses your WooCommerce data and sends no request to Torob."
+msgstr "این پیش‌نمایش از داده‌های ووکامرس استفاده می‌کند و درخواستی به ترب نمی‌فرستد."
+
+msgid "This product is outside the Torob feed. Select a published, visible product or variation."
+msgstr "این محصول در فید ترب نیست. محصول یا تنوع منتشرشده و قابل مشاهده‌ای انتخاب کنید."
+
+msgid "This variant is already mapped to another WooCommerce product."
+msgstr "این تنوع قبلاً به محصول دیگری در ووکامرس نگاشت شده است."
+
+msgid "Time"
+msgstr "زمان"
+
+msgid "Token"
+msgstr "توکن"
+
+msgid "Torob"
+msgstr "ترب"
+
+msgid "Torob Shop API"
+msgstr "اتصال به API فروشگاه ترب"
+
+msgid "Torob endpoints"
+msgstr "نشانی‌های اتصال ترب"
+
+msgid "Torob product IDs"
+msgstr "شناسه‌های محصول در ترب"
+
+msgid "Torob product publishing"
+msgstr "انتشار محصولات در ترب"
+
+msgid "Torob settings"
+msgstr "تنظیمات ترب"
+
+msgid "Torob settings saved."
+msgstr "تنظیمات ترب ذخیره شد."
+
+msgid "Torob tools"
+msgstr "ابزارهای ترب"
+
+msgid "Type the account ID"
+msgstr "شناسهٔ حساب را وارد کنید"
+
+msgid "Unavailable"
+msgstr "در دسترس نیست"
+
+msgid "Unknown Digikala account."
+msgstr "حساب دیجی‌کالا یافت نشد."
+
+msgid "Unknown operation."
+msgstr "عملیات ناشناخته است."
+
+msgid "Unscheduled"
+msgstr "زمان‌بندی نشده"
+
+msgid "Updated"
+msgstr "آخرین تغییر"
+
+msgid "Updated since (ISO 8601)"
+msgstr "تغییرات از زمان (ISO 8601)"
+
+msgid "Use POST for this operation."
+msgstr "برای این عملیات از درخواست POST استفاده کنید."
+
+msgid "Use a separate access token for each seller. Product mappings belong to one account."
+msgstr "برای هر فروشنده توکن دسترسی جداگانه وارد کنید. هر نگاشت محصول به یک حساب تعلق دارد."
+
+msgid "Use a separate account for a different seller while product mappings exist."
+msgstr "تا زمانی که نگاشت محصول وجود دارد، برای فروشندهٔ دیگر حساب جداگانه بسازید."
+
+msgid "Variant ID"
+msgstr "شناسهٔ تنوع"
+
+msgid "Variant details"
+msgstr "جزئیات تنوع"
+
+msgid "Variant seller stock"
+msgstr "موجودی تنوع نزد فروشنده"
+
+msgid "Variants"
+msgstr "تنوع‌ها"
+
+msgid "View delivery queue"
+msgstr "مشاهدهٔ صف ارسال"
+
+msgid "Warehouses"
+msgstr "انبارها"
+
+msgid "Warning"
+msgstr "هشدار"
+
+msgid "Webhook token"
+msgstr "توکن وب‌هوک"
+
+msgid "Webhooks require the product feed and a webhook token."
+msgstr "وب‌هوک به فید فعال و توکن وب‌هوک نیاز دارد."
+
+msgid "WooCommerce price unit"
+msgstr "واحد قیمت ووکامرس"
+
+msgid "WooCommerce product"
+msgstr "محصول ووکامرس"
+
+msgid "WooCommerce product or variation ID"
+msgstr "شناسهٔ محصول یا تنوع ووکامرس"
+
+msgid "WordPress REST URL"
+msgstr "نشانی REST وردپرس"
+
+msgid "WordPress cron is overdue or unscheduled. Check the site’s cron runner."
+msgstr "زمان‌بند وردپرس اجرا نشده یا برنامه‌ای برای اجرا ندارد. وضعیت زمان‌بند سایت را بررسی کنید."
+
+msgid "Yes"
+msgstr "بله"
+
+msgid "report_ids must contain 1..1000 IDs"
+msgstr "از یک تا ۱۰۰۰ شناسهٔ گزارش وارد کنید."
+
+msgid "This account ID already exists. Open it to edit."
+msgstr "این شناسه از قبل وجود دارد. حساب را برای ویرایش باز کنید."
+
+msgid "Replace or remove the token when changing the seller code."
+msgstr "هنگام تغییر کد فروشنده، توکن قبلی را حذف یا جایگزین کنید."
+
+msgid "Configure Torob"
+msgstr "راه‌اندازی ترب"
+
+msgid "Enter a valid WooCommerce ID."
+msgstr "یک شناسهٔ معتبر ووکامرس وارد کنید."
+
+msgid "Scroll the table to see all columns."
+msgstr "برای دیدن همهٔ ستون‌ها، جدول را افقی پیمایش کنید."

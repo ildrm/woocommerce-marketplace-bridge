@@ -23,7 +23,10 @@ final class Plugin {
         $this->registry->register(new DigikalaProvider());
         /** External providers must implement ProviderInterface. */
         do_action('mbwc_register_providers', $this->registry);
-        if (get_option('mbwc_schema_version') !== Database::VERSION) { Database::migrate(); }
+        if (get_option('mbwc_schema_version') !== Database::VERSION && !get_transient('mbwc_migration_pending')) {
+            set_transient('mbwc_migration_pending', 1, MINUTE_IN_SECONDS);
+            Database::migrate();
+        }
         (new Feed())->register();
         (new Webhook())->register();
         (new Attribution())->register();

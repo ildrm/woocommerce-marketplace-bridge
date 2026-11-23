@@ -22,5 +22,10 @@ final class Maintenance {
             // Bound each invocation to protect shared-hosting request time and DB load.
             $wpdb->query($wpdb->prepare("DELETE FROM $dbTable WHERE $column < %s LIMIT 5000",$before));
         }
+        if (get_option('mbwc_schema_version') === Database::VERSION) {
+            $queue = Database::table('torob_queue');
+            $wpdb->query($wpdb->prepare("DELETE FROM $queue WHERE attempts >= %d AND due_at < %d LIMIT 5000",
+                \MarketplaceBridge\WooCommerce\Providers\Torob\Webhook::MAX_ATTEMPTS, time() - 90 * DAY_IN_SECONDS));
+        }
     }
 }

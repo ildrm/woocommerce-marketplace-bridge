@@ -3,8 +3,20 @@ declare(strict_types=1);
 namespace MarketplaceBridge\WooCommerce\Infrastructure;
 
 final class Database {
-    public const VERSION = '1';
+    public const VERSION = '3';
     public static function table(string $name): string { global $wpdb; return $wpdb->prefix . 'mbwc_' . $name; }
+    public static function locked(string $scope, callable $work, int $timeout = 2): mixed {
+        global $wpdb;
+        $lock = 'mbwc_'.substr(hash('sha256', DB_NAME.'.'.$wpdb->prefix.'.'.$scope), 0, 48);
+        if ((int)$wpdb->get_var($wpdb->prepare('SELECT GET_LOCK(%s,%d)', $lock, $timeout)) !== 1) {
+            return new \WP_Error('mbwc_busy', 'Another operation is in progress. Try again.');
+        }
+        try {
+            return $work();
+        } finally {
+            $wpdb->get_var($wpdb->prepare('SELECT RELEASE_LOCK(%s)', $lock));
+        }
+    }
     public static function migrate(): void {
         global $wpdb;
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -58,6 +70,23 @@ final class Database {
             KEY provider_date (provider,created_at),
             KEY status (status)
         ) $charset;");
+        $queue = self::table('torob_queue');
+        dbDelta("CREATE TABLE $queue (
+            product_id bigint(20) unsigned NOT NULL,
+            revision bigint(20) unsigned NOT NULL DEFAULT 1,
+            due_at bigint(20) unsigned NOT NULL,
+            attempts tinyint(3) unsigned NOT NULL DEFAULT 0,
+            previous_url text NOT NULL,
+            last_error varchar(40) NOT NULL DEFAULT '',
+            PRIMARY KEY  (product_id),
+            KEY due_at (due_at,product_id)
+        ) $charset;");
+        foreach ([$maps, $logs, $attributions, $actions, $queue] as $table) {
+            if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->esc_like($table))) !== $table) {
+                return;
+            }
+        }
+        if (!$wpdb->get_var("SHOW COLUMNS FROM $queue LIKE 'last_error'")) { return; }
         update_option('mbwc_schema_version', self::VERSION, false);
     }
 }

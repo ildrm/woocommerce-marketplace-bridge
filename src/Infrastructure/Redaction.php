@@ -19,7 +19,8 @@ final class Redaction {
         }
         if (is_string($data)) {
             $data = preg_replace('/\bBearer\s+[A-Za-z0-9._~+\/-]+/i','Bearer [REDACTED]',$data);
-            $data = preg_replace('/\b09[0-9]{9}\b/','[REDACTED MOBILE]',$data);
+            $data = preg_replace('/(?<!\d)(?:09|\+989|00989)[0-9]{9}(?!\d)/','[REDACTED MOBILE]',$data);
+            $data = preg_replace('/[A-Z0-9.!#$%&\x27*+\/=?^_`{|}~-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i', '[REDACTED EMAIL]', $data);
             return strlen($data)>1800 ? substr($data,0,1800).' [truncated]' : $data;
         }
         return $data;

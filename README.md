@@ -11,13 +11,13 @@ This version fixes specific defects in the prior 0.1.0-alpha package. It **does 
 1. Back up the website and database. Use a staging WooCommerce site first.
 2. Upload the plugin ZIP from **WordPress → Plugins → Add New → Upload Plugin**. Replace the previous version when prompted.
 3. WooCommerce and PHP 8.2+ are required. PHP Sodium is needed for Torob JWT signature verification. OpenSSL is needed for encryption at rest.
-4. In **MarketplaceBridge → Connections**, set the source WooCommerce currency unit explicitly (**IRR** or **IRT**) and configure Torob and Digikala tokens.
-5. For additional Digikala seller connections, add a unique account ID, seller code and token on the Connections page. The default connection preserves the older access-token option.
-6. Map simple products or individual variations to their corresponding Digikala variant IDs; mappings are isolated by account.
-7. **Before enabling the Torob product endpoint**, test a controlled set of product prices. Ensure the currency is correct; this plugin deliberately rejects ambiguous fractional money rather than silently publishing corrupted prices.
+4. In **Marketplace Bridge → Connections**, set the source WooCommerce price unit (**IRR** or **IRT**) and configure the Torob tokens. Use **Torob → Product feed** to preview the outgoing price and availability of a product or variation before enabling the feed.
+5. In **Connections → Digikala seller accounts**, edit the default connection or add a separate account ID, seller code and token for each seller. Validate each connection from **Digikala**. The default connection keeps the existing token.
+6. In **Mappings**, search WooCommerce by product name, SKU or ID, select a simple product or variation, and enter the Digikala variant ID. You can verify access to the variant before saving. Existing mappings can be filtered by seller account and edited from the list.
+7. Give Torob the endpoint listed under **Torob → Product feed** after checking the price and availability of a sample catalog.
 8. Ask Torob to enable the direct integration if this shop qualifies. Their official WooCommerce plugin remains the simplest option for many merchants.
-9. If you need the complete Digikala API inventory, export the authorized official Swagger/OpenAPI **JSON** from the seller portal and upload it through **OpenAPI console**. Imported writes are **blocked**, regardless of what the Swagger says.
-10. Configure the webhook bearer token separately. A Torob webhook acknowledgment indicates queue receipt, **not confirmed indexing**.
+9. To inspect additional read operations, export the official Swagger/OpenAPI **JSON** from the seller portal and import it through **API catalog**. The catalog can run GET requests.
+10. To enable product change notifications, enable the Torob product endpoint and configure the webhook token. WP-Cron schedules batches of up to 100 products every minute, with up to five delivery attempts for temporary errors. The **Delivery queue** shows pending and failed items and lets administrators retry a failed item. A Torob acknowledgment confirms queue receipt. Indexing is asynchronous.
 
 ## Supported Torob endpoints
 

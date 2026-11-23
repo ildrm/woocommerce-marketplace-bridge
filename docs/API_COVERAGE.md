@@ -20,6 +20,8 @@ Official source: https://github.com/torob/Torob-Sync
 | Action tracking | JWT-authenticated, disabled by default; developer event hook |
 | Shop generator connection | Not implemented, partner authorization required |
 
+Torob's tracking endpoints use a timestamp-only cursor. The plugin keeps same-second groups together at page boundaries when they fit in the requested page size. A group that exceeds the requested limit needs a provider-agreed tie-breaker or a finer event timestamp.
+
 ## Digikala
 
 Official developer entry: https://seller.digikala.com/open-api/v1/doc/

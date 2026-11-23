@@ -6,7 +6,7 @@ final class Http {
     /** Only fixed, provider-owned HTTPS origins are permitted. */
     private const ORIGINS = ['torob'=>'https://api.torob.com', 'digikala'=>'https://seller.digikala.com'];
     /** @return array<string,mixed>|\WP_Error */
-    public static function request(string $provider, string $method, string $path, string $token, array $query=[], array|object|null $payload=null, string $sellerCode=""): array|\WP_Error {
+    public static function request(string $provider, string $method, string $path, string $token, array $query=[], array|object|null $payload=null, ?string $sellerCode=null): array|\WP_Error {
         if (!isset(self::ORIGINS[$provider])) { return new \WP_Error('mbwc_provider','Unknown provider'); }
         if (!in_array($method, ['GET','POST','PUT','PATCH','DELETE'], true)) { return new \WP_Error('mbwc_method','Unsupported method'); }
         if (!str_starts_with($path, '/') || str_contains($path, '//') || str_contains($path, '..') || preg_match('/[?#\\\\]/', $path)) {
@@ -14,19 +14,23 @@ final class Http {
         }
         $url = self::ORIGINS[$provider] . $path;
         $query = array_filter($query, static fn($v): bool => is_scalar($v) && $v !== '');
-        if ($query) { $url = add_query_arg($query, $url); }
+        if ($query) { $url .= '?'.http_build_query($query, '', '&', PHP_QUERY_RFC3986); }
         if (strlen($url)>4096) { return new \WP_Error('mbwc_url','Query exceeds URL size limit'); }
         $headers = ['Accept'=>'application/json', 'Content-Type'=>'application/json'];
         if ($token !== '') { $headers['Authorization']='Bearer '.$token; }
         if ($provider === 'digikala') {
-            $seller = trim($sellerCode !== '' ? $sellerCode : (string)get_option('mbwc_digikala_seller_code',''));
+            $seller = trim($sellerCode ?? (string)get_option('mbwc_digikala_seller_code',''));
             if ($seller !== '' && preg_match('/^[A-Za-z0-9_-]{1,60}$/', $seller)) {
                 $headers['User-Agent'] = 'DigikalaTrustedBot/SelfToken/' . $seller;
             }
         }
         $args = ['method'=>$method, 'headers'=>$headers, 'timeout'=>20, 'redirection'=>0, 'sslverify'=>true,
                  'limit_response_size'=>1024*1024, 'reject_unsafe_urls'=>true];
-        if ($payload !== null) { $args['body'] = wp_json_encode($payload); }
+        if ($payload !== null) {
+            $body = wp_json_encode($payload);
+            if ($body === false) { return new \WP_Error('mbwc_json', 'Could not encode request body'); }
+            $args['body'] = $body;
+        }
         $response = wp_safe_remote_request($url, $args);
         if (is_wp_error($response)) {
             Logger::record($provider, 'error', $method.' '.$path, 'network_error', $response->get_error_code());

@@ -7,6 +7,7 @@
  * Requires PHP: 8.2
  * WC requires at least: 8.2
  * Text Domain: marketplacebridge-for-woocommerce
+ * Domain Path: /languages
  * License: GPL-2.0-or-later
  */
 
@@ -18,6 +19,16 @@ define('MBWC_VERSION', '0.2.0-alpha');
 define('MBWC_FILE', __FILE__);
 define('MBWC_PATH', plugin_dir_path(__FILE__));
 define('MBWC_URL', plugin_dir_url(__FILE__));
+
+add_action('init', static function (): void {
+    load_plugin_textdomain('marketplacebridge-for-woocommerce', false, dirname(plugin_basename(__FILE__)).'/languages');
+}, 0);
+
+add_action('before_woocommerce_init', static function (): void {
+    if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+    }
+});
 
 spl_autoload_register(static function (string $class): void {
     $prefix = 'MarketplaceBridge\\WooCommerce\\';
@@ -35,7 +46,11 @@ register_activation_hook(__FILE__, static function (): void {
     add_rewrite_rule('^torob/v1/actions/?$', 'index.php?mbwc_torob_actions=1', 'top');
     flush_rewrite_rules();
 });
-register_deactivation_hook(__FILE__, static function (): void { wp_clear_scheduled_hook('mbwc_daily_cleanup'); flush_rewrite_rules(); });
+register_deactivation_hook(__FILE__, static function (): void {
+    wp_clear_scheduled_hook('mbwc_daily_cleanup');
+    wp_clear_scheduled_hook(\MarketplaceBridge\WooCommerce\Providers\Torob\Webhook::HOOK);
+    delete_option('rewrite_rules');
+});
 
 add_action('plugins_loaded', static function (): void {
     if (!class_exists('WooCommerce')) {

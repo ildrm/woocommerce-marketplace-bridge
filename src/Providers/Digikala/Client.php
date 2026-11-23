@@ -27,13 +27,12 @@ final class Client {
         [$path, $queryKeys] = self::READ_OPERATIONS[$operation];
         if (str_contains($path, '{variant_id}')) {
             $id = (string)($parameters['variant_id'] ?? '');
-            if (!ctype_digit($id) || $id === '0') { return new \WP_Error('mbwc_id','Invalid variant ID'); }
+            if (!preg_match('/^[1-9][0-9]{0,31}$/D', $id)) { return new \WP_Error('mbwc_id','Invalid variant ID'); }
             $path = str_replace('{variant_id}', $id, $path);
         }
         $params = array_intersect_key($parameters, array_flip($queryKeys));
-        if (!Accounts::exists('digikala',$account)) { return new \WP_Error('mbwc_account','Unknown seller account'); }
-        $token = Accounts::token('digikala',$account);
-        if (!$token) { return new \WP_Error('mbwc_auth','Configure a Digikala seller access token'); }
-        return Http::request('digikala', 'GET', $path, $token, $params, null, Accounts::sellerCode($account));
+        $credentials = Accounts::credentials($account);
+        if (is_wp_error($credentials)) { return $credentials; }
+        return Http::request('digikala', 'GET', $path, $credentials['token'], $params, null, $credentials['seller_code']);
     }
 }
