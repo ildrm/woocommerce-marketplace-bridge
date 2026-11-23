@@ -1,0 +1,41 @@
+PASS: encrypted token saved
+PASS: secret roundtrip
+PASS: secret encrypted at rest
+PASS: unknown provider forbidden
+PASS: exact Rial half-up conversion
+PASS: exact decimal-zero Rial conversion
+PASS: Toman amount unchanged
+PASS: fractional currency rejected
+PASS: negative amount rejected
+PASS: exponential notation rejected
+PASS: large money overflow rejected
+PASS: fake signature rejected
+PASS: unsupported JWT version rejected
+PASS: stable Torob product identity
+PASS: additional seller created
+PASS: seller token isolation
+PASS: seller code isolation
+PASS: default legacy token migration preserved
+PASS: missing seller rejected
+PASS: relative and full seller API paths normalized; hostile URL rejected
+PASS: safe catalog persisted
+PASS: imported arbitrary write disabled
+PASS: disabled write makes no HTTP request
+PASS: imported safe GET callable
+PASS: GET targets fixed Digikala origin
+PASS: account-specific authentication
+PASS: account-specific seller header
+PASS: unknown account rejected
+PASS: GET body forbidden
+PASS: foreign OpenAPI origin rejected
+PASS: path traversal rejected
+PASS: host injection rejected
+PASS: PII and bearer values redacted
+PASS: report answers require IDs
+PASS: Torob Shop products request test transport
+PASS: Torob empty filter serialized as JSON object
+PASS: Torob click report requires date
+PASS: Digikala operation allowlist enforced
+PASS: seller account removal
+PASS: removed seller credential deleted
+ALL SMOKE TESTS PASSED (No live provider calls or WordPress integration tests).

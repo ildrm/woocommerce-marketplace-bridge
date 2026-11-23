@@ -1,0 +1,10 @@
+PASS lookup returns 200 response
+PASS API version
+PASS only existing eligible product exported
+PASS stable product ID
+PASS Toman prices from integer Rial
+PASS availability
+PASS required images and spec object
+PASS invalid page rejected
+PASS wrong cursor sort rejected
+TOROB FEED FIXTURE TESTS PASSED.
