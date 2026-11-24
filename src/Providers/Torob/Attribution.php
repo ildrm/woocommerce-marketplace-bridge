@@ -74,6 +74,7 @@ final class Attribution {
         return $parts[0];
     }
     public function attach(\WC_Order $order): void {
+        if (!$this->enabled()) { return; }
         $clid=$this->cookie();
         if ($clid) { $order->update_meta_data('_mbwc_torob_clid',$clid); }
     }
@@ -157,7 +158,9 @@ final class Attribution {
         $rows=$wpdb->get_results($wpdb->prepare("SELECT click_id,action_type,status,happened_at,updated_at FROM $table WHERE happened_at > %s ORDER BY happened_at ASC,id ASC LIMIT %d",$dateSQL,$limit + 1),ARRAY_A)?:[];
         if ($wpdb->last_error) { return new WP_Error('mbwc_tracking_query', 'Unable to query actions', ['status'=>503]); }
         $data=[];
-        foreach(self::fit_page($rows, $limit, 'happened_at') as $r) {
+        $page = self::fit_page($rows, $limit, 'happened_at');
+        if (is_wp_error($page)) { return $page; }
+        foreach($page as $r) {
             $data[]=['timestamp'=>gmdate('Y-m-d\\TH:i:s\\Z',strtotime($r['happened_at'].' UTC')),
               'last_updated_timestamp'=>gmdate('Y-m-d\\TH:i:s\\Z',strtotime($r['updated_at'].' UTC')),
               'torob_clid'=>$r['click_id'],'status'=>$r['status'],'action_type'=>$r['action_type']];
@@ -173,7 +176,9 @@ final class Attribution {
         $records = $this->tracked_orders($table, $dateSQL, $limit + 1);
         if (is_wp_error($records)) { return $records; }
         $data=[];
-        foreach(self::fit_page($records, $limit, 'purchase_at') as $entry) {
+        $page = self::fit_page($records, $limit, 'purchase_at');
+        if (is_wp_error($page)) { return $page; }
+        foreach($page as $entry) {
             $order = $entry['order'];
             $mapped = $entry['status'];
             $updated=$order->get_date_modified();
@@ -216,12 +221,18 @@ final class Attribution {
         return new WP_REST_Response(['success'=>true,'data'=>$data],200);
     }
 
-    private static function fit_page(array $rows, int $limit, string $timestamp): array {
+    private static function fit_page(array $rows, int $limit, string $timestamp): array|WP_Error {
         if (count($rows) <= $limit) { return $rows; }
         $end = $limit;
         // Keep a same-second group together when it fits on its own page.
         while ($end > 0 && $rows[$end - 1][$timestamp] === $rows[$limit][$timestamp]) { --$end; }
-        return array_slice($rows, 0, $end ?: $limit);
+        if (!$end) {
+            // There is no secondary cursor in the provider contract. Never acknowledge a partial timestamp group.
+            $message = $limit < 1000 ? 'Retry the same timestamp with a larger limit (maximum 1000).'
+                : 'More than 1000 records share one timestamp. This group cannot be paged with a timestamp-only cursor.';
+            return new WP_Error('mbwc_tracking_timestamp_group', $message, ['status'=>409]);
+        }
+        return array_slice($rows, 0, $end);
     }
 
     private function tracked_orders(string $table, string $date, int $limit): array|WP_Error {
@@ -230,7 +241,7 @@ final class Attribution {
         $id = PHP_INT_MAX;
         // Older installs may contain pending and deleted orders. Scan past them in bounded batches.
         $batch = min(max($limit, 25), 250);
-        for ($scanned = 0; $scanned < 2000; $scanned += $batch) {
+        while (true) {
             $rows = $wpdb->get_results($wpdb->prepare("SELECT id,order_id,click_id,purchase_at,updated_at FROM $table
                 WHERE purchase_at > %s OR (purchase_at=%s AND id>%d) ORDER BY purchase_at,id LIMIT %d",
                 $date, $date, $id, $batch), ARRAY_A);

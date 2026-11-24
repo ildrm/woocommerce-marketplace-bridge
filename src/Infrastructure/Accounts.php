@@ -28,7 +28,7 @@ final class Accounts {
     }
 
     public static function save(string $provider, string $id, string $label, string $sellerCode, string $token, bool $clear = false,
-        bool $create = false): bool|WP_Error {
+        ?bool $create = null): bool|WP_Error {
         if ($provider !== 'digikala' || !self::validId($id) || $label === '' || strlen($label) > 360
             || !preg_match('/^[A-Za-z0-9_-]{0,60}$/D', $sellerCode) || ($clear && $token !== '') || !Secrets::valid_token($token)) {
             return new WP_Error('mbwc_account', 'Invalid Digikala account configuration.');
@@ -37,6 +37,7 @@ final class Accounts {
             $accounts = self::all('digikala');
             $known = isset($accounts[$id]);
             if ($create && $known) { return new WP_Error('mbwc_account_exists', 'This account ID already exists. Open it to edit.'); }
+            if ($create === false && !$known) { return new WP_Error('mbwc_account', 'Unknown Digikala account.'); }
             foreach (array_keys($accounts) as $existingId) {
                 if ($id !== $existingId && strcasecmp($id, $existingId) === 0) {
                     return new WP_Error('mbwc_account', 'Account IDs must be unique regardless of letter case.');

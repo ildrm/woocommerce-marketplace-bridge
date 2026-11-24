@@ -51,6 +51,7 @@ final class Feed {
         $body = get_object_vars($body);
         $hasUrls = array_key_exists('page_urls', $body);
         $hasIds = array_key_exists('page_uniques', $body);
+        if (array_key_exists('limit', $body) || array_key_exists('size', $body)) { return $this->invalid('Page size is fixed at 100'); }
         if ($hasUrls && $hasIds) { return $this->invalid('Choose one lookup method'); }
         if ($hasUrls || $hasIds) {
             $key = $hasUrls ? 'page_urls':'page_uniques';
@@ -72,7 +73,6 @@ final class Feed {
         }
         $sort = $body['sort'] ?? null;
         if (!is_string($sort) || !in_array($sort, ['date_added_desc','date_updated_desc','product_id_desc'], true)) { return $this->invalid('sort parameter is missing or invalid'); }
-        if (array_key_exists('limit', $body) || array_key_exists('size', $body)) { return $this->invalid('Page size is fixed at 100'); }
         $cursor = array_key_exists('cursor', $body);
         if ($cursor && ($sort !== 'product_id_desc' || array_key_exists('page', $body)
             || !is_string($body['cursor']) || self::positive_id($body['cursor']) === 0)) {
@@ -226,9 +226,9 @@ final class Feed {
         $mainId = $product->get_image_id();
         if (!$mainId && $product->is_type('variation')) { $mainId = (int)get_post_thumbnail_id($product->get_parent_id()); }
         $images = [];
-        if ($mainId) { $image = wp_get_attachment_image_url($mainId, 'full'); if ($image) { $images[]=$image; } }
+        if ($mainId) { $image = wp_get_attachment_image_url($mainId, 'full'); if ($image && strlen($image) <= 1000) { $images[]=$image; } }
         foreach ($product->get_gallery_image_ids() as $id) {
-            $image = wp_get_attachment_image_url($id, 'full'); if ($image && !in_array($image, $images, true)) { $images[]=$image; }
+            $image = wp_get_attachment_image_url($id, 'full'); if ($image && strlen($image) <= 1000 && !in_array($image, $images, true)) { $images[]=$image; }
         }
         $parentId = $product->is_type('variation') ? $product->get_parent_id() : $product->get_id();
         $terms = get_the_terms($parentId, 'product_cat');

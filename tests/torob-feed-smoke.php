@@ -2,6 +2,7 @@
 /** Feed contract sanity checks with WooCommerce fixture objects; not a WordPress integration test. */
 declare(strict_types=1);
 define('ARRAY_A', 'ARRAY_A');
+define('DB_NAME', 'fixture');
 class WP_Error {
     public function __construct(public string $code='',public string $message='',public mixed $data=null) {}
     public function get_error_data(): mixed {return $this->data;}
@@ -71,14 +72,20 @@ class FakeDb {
     public array $ids=[];
     public array $calls=[];
     public array $trackingRows=[];
+    public array $orders=[];
+    public array $writes=[];
+    public function query(string $sql):int { $this->writes[]=$sql; return 1; }
     public function insert(string $table,array $data,array $fmt):bool{return true;}
     public function prepare(string $query,mixed ...$args):string {
         $this->calls[]=[$query,$args];
         return $query;
     }
     public function get_col(string $query):array{return $this->ids;}
-    public function get_var(string $query):mixed{return count($this->ids);}
-    public function get_results(string $query, string $format):array{return $this->trackingRows;}
+    public function get_var(string $query):mixed{return str_contains($query, 'LOCK') ? 1 : count($this->ids);}
+    public function get_results(string $query, string $format):array{
+        if (str_contains($query,'FROM wp_mbwc_attribution')) { return array_splice($this->orders,0,25); }
+        return $this->trackingRows;
+    }
 }
 function wc_get_product_visibility_term_ids():array{return ['exclude-from-catalog'=>11,'exclude-from-search'=>12];}
 function _prime_post_caches(array $ids):void{}
@@ -147,4 +154,32 @@ check(count($firstPage->get_data()['data'])===1,'tracking keeps a same-second gr
 $GLOBALS['wpdb']->trackingRows=[$sameSecond,$sameSecond];
 $secondPage=$attribution->actions(new WP_REST_Request('', ['timestamp_gt'=>'2026-11-23T12:00:00Z','limit'=>'2']));
 check(count($secondPage->get_data()['data'])===2,'deferred timestamp group fits on the next tracking page');
+$blocked=$attribution->actions(new WP_REST_Request('', ['timestamp_gt'=>'2026-11-23T12:00:00Z','limit'=>'1']));
+check($blocked instanceof WP_Error && $blocked->data['status']===409, 'a timestamp-only poll cannot silently skip the second action');
+$GLOBALS['wpdb']->trackingRows=array_fill(0, 1001, $sameSecond);
+$blocked=$attribution->actions(new WP_REST_Request('', ['timestamp_gt'=>'2026-11-23T12:00:00Z','limit'=>'1000']));
+check($blocked instanceof WP_Error && $blocked->data['status']===409, 'an oversized legacy timestamp group reports the protocol limit');
+class WC_Order {
+    public function get_meta(string $key,bool $single):string{return 'fixture-click';}
+    public function get_status():string{return 'completed';}
+    public function get_date_modified():?object{return null;}
+    public function get_payment_method():string{return 'offline';}
+}
+function wc_get_order(int $id):WC_Order|false { return $id===2005 ? new WC_Order() : false; }
+for ($id=1;$id<=2005;++$id) {
+    $GLOBALS['wpdb']->orders[]=['id'=>$id,'order_id'=>$id,'click_id'=>'fixture-click','purchase_at'=>'2026-11-23 12:00:01','updated_at'=>'2026-11-23 12:00:01'];
+}
+$scanned=$attribution->orders(new WP_REST_Request('', ['purchase_timestamp_gt'=>'2026-11-23T12:00:00Z','limit'=>'1']));
+check(count($scanned->get_data()['data'])===1, 'older deleted orders cannot hide later reportable purchases');
+
+function wp_salt(string $context):string{return 'fixture-key';}
+require dirname(__DIR__).'/src/Infrastructure/Secrets.php';
+require dirname(__DIR__).'/src/Providers/Torob/Webhook.php';
+$GLOBALS['options']=['mbwc_schema_version'=>MarketplaceBridge\WooCommerce\Infrastructure\Database::VERSION,
+    'mbwc_torob_enabled'=>'1','mbwc_torob_webhooks'=>'1'];
+function update_option(string $key,mixed $value,bool $autoload):bool{$GLOBALS['options'][$key]=$value;return true;}
+MarketplaceBridge\WooCommerce\Infrastructure\Secrets::set('torob','webhook_token','fixture-only');
+$GLOBALS['wpdb']->trackingRows=[['product_id'=>'124','revision'=>'1','attempts'=>'0','previous_url'=>'']];
+(new MarketplaceBridge\WooCommerce\Providers\Torob\Webhook())->drain();
+check(count($GLOBALS['wpdb']->writes)===1 && str_starts_with($GLOBALS['wpdb']->writes[0],'DELETE'), 'a queued edit to a protected product is discarded before delivery');
 echo "TOROB FEED FIXTURE TESTS PASSED.\n";

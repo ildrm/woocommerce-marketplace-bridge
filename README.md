@@ -26,6 +26,8 @@ This version fixes specific defects in the prior 0.1.0-alpha package. It **does 
 - `GET https://YOUR-STORE/torob/v1/actions` — optional, Torob-origin actions only; disabled by default.
 - WordPress REST fallbacks: `/wp-json/marketplacebridge/v1/torob/products`, `/torob/orders` and `/torob/actions`.
 
+Order and action polling uses a timestamp cursor. If a requested page would split records sharing a second, the endpoint can return HTTP 409. Retry the same cursor with a larger limit, up to 1,000. A group larger than 1,000 cannot be retrieved through the timestamp-only protocol on this build.
+
 Torob Shop API operations and notifications are available as manually invoked admin actions, except irreversible charge transfer. Exact limitations are described in the API coverage document.
 
 ## Supported Digikala integration

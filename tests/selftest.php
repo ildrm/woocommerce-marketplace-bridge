@@ -164,4 +164,6 @@ unset($GLOBALS['mbwc_http_response']);
 ok(is_wp_error((new DigikalaClient())->read('not_allowed')),'Digikala operation allowlist enforced');
 ok(Accounts::remove('digikala','seller_two'),'seller account removal');
 ok(Accounts::token('digikala','seller_two')==='','removed seller credential deleted');
+ok(is_wp_error(Accounts::save('digikala','seller_two','Old form','ABC012','',false,false))
+    && !Accounts::exists('digikala','seller_two'), 'stale edit cannot re-create a removed seller');
 echo "ALL SMOKE TESTS PASSED (No live provider calls or WordPress integration tests).\n";

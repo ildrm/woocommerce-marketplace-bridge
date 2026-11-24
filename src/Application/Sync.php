@@ -99,8 +99,15 @@ final class Sync {
         return Accounts::hasMappings($account);
     }
 
-    public static function remove_mapping(int $id): bool {
-        global $wpdb;
-        return $id > 0 && $wpdb->delete(Database::table('mappings'), ['id'=>$id, 'provider'=>'digikala'], ['%d', '%s']) === 1;
+    public static function remove_mapping(int $id, ?string $revision = null): bool {
+        if ($id <= 0) { return false; }
+        return Database::locked(Accounts::LOCK, static function () use ($id, $revision): bool {
+            global $wpdb;
+            if ($revision !== null) {
+                $row = self::mapping($id);
+                if (!$row || !hash_equals(self::revision($row), $revision)) { return false; }
+            }
+            return $wpdb->delete(Database::table('mappings'), ['id'=>$id, 'provider'=>'digikala'], ['%d', '%s']) === 1;
+        }) === true;
     }
 }

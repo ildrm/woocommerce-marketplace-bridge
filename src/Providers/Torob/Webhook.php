@@ -22,6 +22,7 @@ final class Webhook {
         }
         add_action('wp_trash_post', [$this, 'removing'], 10, 1);
         add_action('before_delete_post', [$this, 'removing'], 10, 1);
+        add_action('set_object_terms', [$this, 'visibility_changed'], 10, 6);
         add_action('post_updated', [$this, 'post_updated'], 10, 3);
         add_filter('cron_schedules', static function (array $schedules): array {
             $schedules['mbwc_torob_minute'] = ['interval'=>60, 'display'=>'MarketplaceBridge Torob queue'];
@@ -59,18 +60,31 @@ final class Webhook {
         $this->enqueue(array_fill_keys($ids, ''));
     }
 
+    public function visibility_changed(int $id, mixed $terms, array $termIds, string $taxonomy, bool $append, array $oldIds): void {
+        if ($taxonomy !== 'product_visibility' || $append || !self::enabled()) { return; }
+        $visibility = wc_get_product_visibility_term_ids();
+        $hidden = [$visibility['exclude-from-catalog'], $visibility['exclude-from-search']];
+        if (array_diff($hidden, $termIds) || !array_diff($hidden, $oldIds)) { return; }
+        $post = get_post($id);
+        if ($post && $post->post_type === 'product' && $post->post_status === 'publish' && $post->post_password === '') {
+            $this->queue_removal($post);
+        }
+    }
+
     public function removing(int $id): void {
         $post = get_post($id);
         if (!$post || !in_array($post->post_type, ['product', 'product_variation'], true)
-            || $post->post_status !== 'publish' || !self::enabled()) { return; }
-        $this->queue_removal($post);
+            || $post->post_status !== 'publish' || $post->post_password !== '' || !self::enabled()) { return; }
+        $product = wc_get_product($id);
+        if ($product && $product->get_catalog_visibility('edit') !== 'hidden') { $this->queue_removal($post); }
     }
 
     public function post_updated(int $id, WP_Post $after, WP_Post $before): void {
         if (!in_array($before->post_type, ['product', 'product_variation'], true) || $before->post_status !== 'publish'
-            || ($after->post_status === 'publish' && ($before->post_password !== '' || $after->post_password === ''))
+            || $before->post_password !== '' || ($after->post_status === 'publish' && $after->post_password === '')
             || $after->post_status === 'trash' || !self::enabled()) { return; }
-        $this->queue_removal($before);
+        $product = wc_get_product($id);
+        if ($product && $product->get_catalog_visibility('edit') !== 'hidden') { $this->queue_removal($before); }
     }
 
     private function queue_removal(WP_Post $post): void {
@@ -82,11 +96,16 @@ final class Webhook {
             if (!$parentUrl) { return; }
             foreach ($product->get_children() as $id) {
                 $child = wc_get_product($id);
-                if ($child && $child->get_status('edit') === 'publish') {
+                if ($child && $child->get_status('edit') === 'publish' && get_post_field('post_password', $id, 'raw') === '') {
                     $urls[$id] = Feed::url($child, $parentUrl);
                 }
             }
         } else {
+            if ($product->is_type('variation')) {
+                $parent = wc_get_product($product->get_parent_id());
+                if (!$parent || $parent->get_status('edit') !== 'publish' || $parent->get_catalog_visibility('edit') === 'hidden'
+                    || get_post_field('post_password', $parent->get_id(), 'raw') !== '') { return; }
+            }
             $urls = [$post->ID => $product->is_type('variation') ? Feed::url($product) : (get_permalink($post) ?: '')];
         }
         $this->enqueue($urls);
@@ -132,8 +151,7 @@ final class Webhook {
                 $id = (int)$row['product_id'];
                 $product = wc_get_product($id);
                 $url = (string)$row['previous_url'];
-                if ($product && $product->get_status('edit') === 'publish' && !$product->is_type('variable')
-                    && ($url === '' || Feed::eligible($product))) {
+                if ($product && Feed::eligible($product)) {
                     $url = Feed::url($product);
                 }
                 if (!Feed::is_store_url($url)) {

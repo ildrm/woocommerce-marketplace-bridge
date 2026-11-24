@@ -110,8 +110,10 @@ final class Dashboard {
                 $result = Accounts::save('digikala', $id, $label, $seller, $token, self::field($_POST, 'clear_token') === '1',
                     self::field($_POST, 'create_account') === '1');
                 if ($result !== true) {
-                    $context = Accounts::exists('digikala', $id) ? ['edit_account'=>$id] : ['edit_account'=>'~new'];
-                    $this->redirect('providers', is_wp_error($result) ? $result : 'Could not save the account.', 'error', $context);
+                    $isNew = self::field($_POST, 'create_account') === '1';
+                    $context = ['edit_account'=>$isNew ? '~new' : $id];
+                    $extra = ['account_form'=>['id'=>substr($id, 0, 40), 'label'=>wp_html_excerpt($label, 90), 'seller_code'=>substr($seller, 0, 60)]];
+                    $this->redirect('providers', is_wp_error($result) ? $result : 'Could not save the account.', 'error', $context, $extra);
                 }
                 delete_transient(self::health_key('digikala', $id));
                 $this->redirect('providers', 'Seller account saved.', 'success', ['edit_account'=>$id]);
@@ -175,7 +177,7 @@ final class Dashboard {
                     $this->redirect('mappings', 'Confirm removal of the mapping.', 'error');
                 }
                 $id = self::integer(self::field($_POST, 'mapping_id'));
-                $result = Sync::remove_mapping($id);
+                $result = Sync::remove_mapping($id, self::field($_POST, 'mapping_revision'));
                 $this->redirect('mappings', $result ? 'Mapping removed.' : 'Could not remove the mapping.', $result ? 'success' : 'error',
                     ['filter_account'=>self::field($_POST, 'filter_account')]);
 

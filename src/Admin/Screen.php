@@ -129,7 +129,7 @@ final class Screen {
         $this->table(['Account', 'Seller code', 'Token', 'Last connection test', 'Actions']);
         foreach ($accounts as $id=>$account) {
             $token = Accounts::token('digikala', $id) !== '';
-            echo '<tr><td><strong>'.self::label($account['label']).'</strong> <bdi class="mbwc-muted">'.esc_html($id).'</bdi></td>';
+            echo '<tr><td><strong>'.esc_html($account['label']).'</strong> <bdi class="mbwc-muted">'.esc_html($id).'</bdi></td>';
             echo '<td><bdi>'.esc_html($account['seller_code'] ?: '—').'</bdi></td><td>';
             $this->badge($token ? 'Configured' : 'Missing', $token ? 'ready' : 'warning');
             echo '</td><td>'; $this->health('digikala', $id); echo '</td><td>';
@@ -145,13 +145,13 @@ final class Screen {
         $id = $this->query('edit_account');
         $new = $id === '~new';
         if ($new || isset($accounts[$id])) {
-            $account = $accounts[$id] ?? ['label'=>'', 'seller_code'=>''];
+            $account = ($this->flash['account_form'] ?? []) + ($accounts[$id] ?? ['label'=>'', 'seller_code'=>'']);
             $this->panel($new ? 'Add seller account' : 'Edit seller account', 'mbwc-account-editor');
             $this->post('save_account');
             echo '<div class="mbwc-fields">';
             if ($new) {
                 $this->hidden('create_account', '1');
-                $this->input('account_id', 'Account ID', '', ['required'=>true, 'maxlength'=>'40', 'pattern'=>'[A-Za-z][A-Za-z0-9_\-]*', 'dir'=>'ltr']);
+                $this->input('account_id', 'Account ID', $account['id'] ?? '', ['required'=>true, 'maxlength'=>'40', 'pattern'=>'[A-Za-z][A-Za-z0-9_\-]*', 'dir'=>'ltr']);
             } else {
                 $this->hidden('account_id', $id);
             }
@@ -454,6 +454,7 @@ final class Screen {
                 echo '<details class="mbwc-details"><summary>'.self::label('Remove').'</summary>';
                 $this->post('delete_mapping');
                 $this->hidden('mapping_id', (string)$row['id']);
+                $this->hidden('mapping_revision', Sync::revision($row));
                 $this->hidden('filter_account', $filter);
                 $this->check('confirm', 'Remove this mapping?', false, true);
                 $this->end('Remove mapping', 'button mbwc-danger');
@@ -527,11 +528,11 @@ final class Screen {
     }
 
     private function account_field(string $selected, string $name = 'account', bool $all = false): void {
-        $options = $all ? [''=>'All accounts'] : [];
+        $options = $all ? [''=>self::t('All accounts')] : [];
         foreach (Accounts::all('digikala') as $id=>$account) {
-            $options[$id] = self::t($account['label']).' ('.$id.')';
+            $options[$id] = $account['label'].' ('.$id.')';
         }
-        $this->select($name, 'Seller account', $options, $selected);
+        $this->select($name, 'Seller account', $options, $selected, true);
     }
 
     private function product_title(WC_Product $product): string {
